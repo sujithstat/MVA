@@ -1,3 +1,4 @@
+######### Pract1
 #1
 rm(list=ls())
 library(dplyr)
@@ -20,6 +21,75 @@ d=data.frame(x1,x2,x3,x4,x5,x6)
 R=cor(d);R
 pairs.panels(d,main="Scatter Plot")
 ggplot(data = as.data.frame(as.table(R)),aes(Var1,Var2,fill=Freq))+geom_tile()+scale_fill_gradient(low="blue",high = "red")+labs(title = "Heat Map",x="Variables",y="Variables",fill="correlation")
+
+########## Pract5
+#1
+rm(list = ls())
+x=c(0.314,0.333,0.191,0.761,0.901,0.847,0.403,0.159,0.741,0.133)
+qqnorm(x)
+qqline(x)
+
+#2
+rm(list = lS())
+x=c(-1,-0.10,0.16,0.41,0.62,0.80,1.26,1.54,1.71,2.30)
+qqnorm(x)
+qqline(x)
+
+#3
+rm(list = ls())
+x=c(0.15,0.09,0.18,0.10,0.05,0.12,0.08,0.05,0.08,
+     0.10,0.07,0.02,0.01,0.01,0.01,0.01,0.02,0.10,
+     0.10,0.40,0.10,0.05,0.03,0.05,0.15)
+qqnorm(x)
+qqline(x)
+
+#4
+rm(list = ls())
+library(mvoutlier)
+par(mfrow=c(1,2))
+x1=c(108.28,152.36,95.04,65.45,62.97,263.99,265.19,285.06,92.01,165.68)
+x2=c(17.05,16.59,10.91,14.14,9.52,25.33,18.54,15.73,8.10,11.13)
+qqnorm(x1)
+qqline(x1)
+qqnorm(x2)
+qqline(x2)
+dat=data.frame(x1,x2);dat
+n=nrow(dat);n
+p=ncol(dat);p
+xbar=apply(dat,2,mean);xbar
+S=((n+1)/n)*var(dat);S
+d=c()
+
+for (j in 1:n) {
+  xj=t(dat[j,])
+  d[j]=t(xj - xbar) %*% solve(S) %*% (xj - xbar)
+}
+d
+d=sort(d);d
+j=1:n
+qp=qchisq(lower.tail = T,p = (j-0.5)/n,df = p);qp
+plot(y = qp,x = d)
+chisq.plot(dat,ask = FALSE,quan = 1)
+
+
+
+
+########## Pract6
+rm(list=ls())
+x1=c(3.7,5.7,3.8,3.2,3.1,4.6,2.4,7.2,6.7,5.4,3.9,4.5,3.5,4.5,1.5,8.5,4.5,6.5,4.1,5.5)
+x2=c(48.5,67.1,47.2,53.2,55.5,36.1,24.8,33.1,47.4,54.1,36.9,58.8,27.8,40.2,13.5,56.4,71.6,52.8,44.1,40.9)
+x3=c(9.3,8,10.9,12,9.7,7.9,14,7.6,8.5,11.3,12.7,12.3,9.8,8.4,10.1,7.1,8.2,10.9,11.2,9.4)
+qqnorm(x1)
+qqline(x1)
+qqnorm(x2)
+qqline(x2)
+qqnorm(x3)
+qqline(x3)
+dat=data.frame(x1,x2,x3)
+chisq.plot(dat,quan = 1,ask = F)
+
+
+
 
 
 ########## Pract7
@@ -100,18 +170,3 @@ rMVN.chol=function(n,mu,sig){
 rMVN.eigen(1000,mu,sig)
 rMVN.SVD(1000,mu,sig)
 rMVN.chol(1000,mu,sig)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
