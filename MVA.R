@@ -22,6 +22,85 @@ pairs.panels(d,main="Scatter Plot")
 ggplot(data = as.data.frame(as.table(R)),aes(Var1,Var2,fill=Freq))+geom_tile()+scale_fill_gradient(low="blue",high = "red")+labs(title = "Heat Map",x="Variables",y="Variables",fill="correlation")
 
 
+########## Pract7
+#1
+rm(list = ls())
+mu=c(0,0)
+sig=matrix(c(1,0.9,0.9,1),nrow = 2)
+rMVN.eigen=function(n,mu,sig){
+  p=length(mu)
+  ev=eigen(sig,symmetric = TRUE)
+  lambda=ev$values
+  V=ev$vectors
+  Q = V %*% diag(sqrt(lambda)) %*% t(V)
+  Z = matrix(rnorm(n*p),nrow = n,ncol = p)
+  X = Z %*% Q + matrix(mu,n,p,byrow = TRUE)
+  return(X)
+  }
+X=rMVN.eigen(1000,mu,sig);X
+qqnorm(X[,2])
+qqline(X[,1])
+
+#2
+rm(list = ls())
+mu=c(0,1,2)
+sig=matrix(c(1,-0.5,0.5,-0.5,1,-0.5,0.5,-0.5,1),nrow = 3)
+rMVN.eigen=function(n,mu,sig){
+  p=length(mu)
+  ev=eigen(sig,symmetric = TRUE)
+  lambda=ev$values
+  V=ev$vectors
+  Q = V %*% diag(sqrt(lambda)) %*% t(V)
+  Z = matrix(rnorm(n*p),nrow = n,ncol = p)
+  X = Z %*% Q + matrix(mu,n,p,byrow = TRUE)
+  return(X)
+}
+X=rMVN.eigen(1000,mu,sig);X
+qqnorm(X)
+qqline(X)
+
+library(psych)
+pairs.panels(X,main="Scattler Plot")
+
+#3
+rm(list = ls())
+data("iris")
+d=iris[,-5];d=as.matrix(d);d
+mu=apply(d, 2, mean);mu
+sig=cov(d);sig
+rMVN.eigen=function(n,mu,sig){
+  p=length(mu)
+  ev=eigen(sig,symmetric = TRUE)
+  lambda=ev$values
+  V=ev$vectors
+  Q = V %*% diag(sqrt(lambda)) %*% t(V)
+  Z = matrix(rnorm(n*p),nrow = n,ncol = p)
+  X = Z %*% Q + matrix(mu,n,p,byrow = TRUE)
+  return(X)
+}
+
+rMVN.SVD=function(n,mu,sig){
+  p=length(mu)
+  ev=eigen(sig,symmetric = TRUE)
+  lambda=ev$values
+  S=svd(sig)
+  Q = S$u %*% diag(sqrt(lambda)) %*% t(S$v)
+  Z = matrix(rnorm(n*p),nrow = n,ncol = p)
+  X = Z %*% Q + matrix(mu,n,p,byrow = TRUE)
+  return(X)
+}
+rMVN.chol=function(n,mu,sig){
+  p=length(mu)
+  Q = chol(sig)
+  Z = matrix(rnorm(n*p),nrow = n,ncol = p)
+  X = Z %*% Q + matrix(mu,n,p,byrow = TRUE)
+  return(X)
+}
+
+rMVN.eigen(1000,mu,sig)
+rMVN.SVD(1000,mu,sig)
+rMVN.chol(1000,mu,sig)
+
 
 
 
