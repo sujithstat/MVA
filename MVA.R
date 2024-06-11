@@ -24,29 +24,24 @@ ggplot(data = as.data.frame(as.table(R)),aes(Var1,Var2,fill=Freq))+geom_tile()+s
 
 ########## Pract5
 #1
-rm(list = ls())
-x=c(0.314,0.333,0.191,0.761,0.901,0.847,0.403,0.159,0.741,0.133)
-qqnorm(x)
-qqline(x)
+par(mfrow=c(2,3))
+a=c(0.314,0.333,0.191,0.761,0.901,0.847,0.403,0.159,0.741,0.133)
+qqnorm(a)
+qqline(a)
 
 #2
-rm(list = lS())
-x=c(-1,-0.10,0.16,0.41,0.62,0.80,1.26,1.54,1.71,2.30)
-qqnorm(x)
-qqline(x)
+b=c(-1,-0.10,0.16,0.41,0.62,0.80,1.26,1.54,1.71,2.30)
+qqnorm(b)
+qqline(b)
 
 #3
-rm(list = ls())
-x=c(0.15,0.09,0.18,0.10,0.05,0.12,0.08,0.05,0.08,
+d=c(0.15,0.09,0.18,0.10,0.05,0.12,0.08,0.05,0.08,
      0.10,0.07,0.02,0.01,0.01,0.01,0.01,0.02,0.10,
      0.10,0.40,0.10,0.05,0.03,0.05,0.15)
-qqnorm(x)
-qqline(x)
+qqnorm(d)
+qqline(d)
 
 #4
-rm(list = ls())
-library(mvoutlier)
-par(mfrow=c(1,2))
 x1=c(108.28,152.36,95.04,65.45,62.97,263.99,265.19,285.06,92.01,165.68)
 x2=c(17.05,16.59,10.91,14.14,9.52,25.33,18.54,15.73,8.10,11.13)
 qqnorm(x1)
@@ -68,8 +63,8 @@ d
 d=sort(d);d
 j=1:n
 qp=qchisq(lower.tail = T,p = (j-0.5)/n,df = p);qp
-plot(y = qp,x = d)
-chisq.plot(dat,ask = FALSE,quan = 1)
+plot(y = qp,x = d,main="Chi-Square Plot")
+
 
 
 
@@ -86,7 +81,21 @@ qqline(x2)
 qqnorm(x3)
 qqline(x3)
 dat=data.frame(x1,x2,x3)
-chisq.plot(dat,quan = 1,ask = F)
+n=nrow(dat);n
+p=ncol(dat);p
+xbar=apply(dat,2,mean);xbar
+S=((n+1)/n)*var(dat);S
+d=c()
+
+for (j in 1:n) {
+  xj=t(dat[j,])
+  d[j]=t(xj - xbar) %*% solve(S) %*% (xj - xbar)
+}
+d
+d=sort(d);d
+j=1:n
+qp=qchisq(lower.tail = T,p = (j-0.5)/n,df = p);qp
+plot(y = qp,x = d,main="Chi-Square Plot")
 
 
 
@@ -95,6 +104,7 @@ chisq.plot(dat,quan = 1,ask = F)
 ########## Pract7
 #1
 rm(list = ls())
+par(mfrow=c(2,2))
 mu=c(0,0)
 sig=matrix(c(1,0.9,0.9,1),nrow = 2)
 rMVN.eigen=function(n,mu,sig){
@@ -108,11 +118,34 @@ rMVN.eigen=function(n,mu,sig){
   return(X)
   }
 X=rMVN.eigen(1000,mu,sig);X
-qqnorm(X[,2])
+qqnorm(X[,1])
 qqline(X[,1])
+qqnorm(X[,2])
+qqline(X[,2])
+
+chisqplot=function(dat){
+  n=nrow(dat);n
+  p=ncol(dat);p
+  xbar=apply(dat,2,mean);xbar
+  S=((n+1)/n)*var(dat);S
+  d=c()
+  
+  for (j in 1:n) {
+    xj=t(dat[j,])
+    d[j]=t(xj - xbar) %*% solve(S) %*% (xj - xbar)
+  }
+  d
+  d=sort(d);d
+  j=1:n
+  qp=qchisq(lower.tail = T,p = (j-0.5)/n,df = p);qp
+  plot(y = qp,x = d,main="Chi-Square Plot")
+}
+chisqplot(as.data.frame(X))
+
 
 #2
 rm(list = ls())
+par(mfrow=c(2,2))
 mu=c(0,1,2)
 sig=matrix(c(1,-0.5,0.5,-0.5,1,-0.5,0.5,-0.5,1),nrow = 3)
 rMVN.eigen=function(n,mu,sig){
@@ -126,14 +159,39 @@ rMVN.eigen=function(n,mu,sig){
   return(X)
 }
 X=rMVN.eigen(1000,mu,sig);X
-qqnorm(X)
-qqline(X)
+qqnorm(X[,1])
+qqline(X[,1])
+qqnorm(X[,2])
+qqline(X[,2])
+qqnorm(X[,3])
+qqline(X[,3])
+
+
+chisqplot=function(dat){
+  n=nrow(dat);n
+  p=ncol(dat);p
+  xbar=apply(dat,2,mean);xbar
+  S=((n+1)/n)*var(dat);S
+  d=c()
+  
+  for (j in 1:n) {
+    xj=t(dat[j,])
+    d[j]=t(xj - xbar) %*% solve(S) %*% (xj - xbar)
+  }
+  d
+  d=sort(d);d
+  j=1:n
+  qp=qchisq(lower.tail = T,p = (j-0.5)/n,df = p);qp
+  plot(y = qp,x = d,main="Chi-Square Plot")
+}
+chisqplot(as.data.frame(X))
 
 library(psych)
 pairs.panels(X,main="Scattler Plot")
 
 #3
 rm(list = ls())
+par(mfrow=c(3,5))
 data("iris")
 d=iris[,-5];d=as.matrix(d);d
 mu=apply(d, 2, mean);mu
@@ -167,6 +225,54 @@ rMVN.chol=function(n,mu,sig){
   return(X)
 }
 
-rMVN.eigen(1000,mu,sig)
-rMVN.SVD(1000,mu,sig)
-rMVN.chol(1000,mu,sig)
+X1=rMVN.eigen(1000,mu,sig);X1
+X2=rMVN.SVD(1000,mu,sig);X2
+X3=rMVN.chol(1000,mu,sig);X3
+
+qqnorm(X1[,1])
+qqline(X1[,1])
+qqnorm(X1[,2])
+qqline(X1[,2])
+qqnorm(X1[,3])
+qqline(X1[,3])
+qqnorm(X1[,4])
+qqline(X1[,4])
+
+qqnorm(X2[,1])
+qqline(X2[,1])
+qqnorm(X2[,2])
+qqline(X2[,2])
+qqnorm(X2[,3])
+qqline(X2[,3])
+qqnorm(X2[,4])
+qqline(X2[,4])
+
+qqnorm(X3[,1])
+qqline(X3[,1])
+qqnorm(X3[,2])
+qqline(X3[,2])
+qqnorm(X3[,3])
+qqline(X3[,3])
+qqnorm(X3[,4])
+qqline(X3[,4])
+
+chisqplot=function(dat){
+  n=nrow(dat);n
+  p=ncol(dat);p
+  xbar=apply(dat,2,mean);xbar
+  S=((n+1)/n)*var(dat);S
+  d=c()
+  
+  for (j in 1:n) {
+    xj=t(dat[j,])
+    d[j]=t(xj - xbar) %*% solve(S) %*% (xj - xbar)
+  }
+  d
+  d=sort(d);d
+  j=1:n
+  qp=qchisq(lower.tail = T,p = (j-0.5)/n,df = p);qp
+  plot(y = qp,x = d,main="Chi-Square Plot")
+}
+chisqplot(as.data.frame(X1))
+chisqplot(as.data.frame(X2))
+chisqplot(as.data.frame(X3))
